@@ -47,6 +47,9 @@ resource "alicloud_vswitch" "vsw" {
   zone_id    = data.alicloud_zones.zones_ds.zones.0.id
 }
 
+data "template_file" "user_data" {
+  template = var.user_data_path == "" ? "" : file(var.user_data_path)
+}
 
 # ECS Instance Resource for Module
 resource "alicloud_instance" "this" {
@@ -91,7 +94,7 @@ resource "alicloud_instance" "this" {
   auto_renew_period             = lookup(local.subscription, "auto_renew_period", null)
   include_data_disks            = lookup(local.subscription, "include_data_disks", null)
   dry_run                       = var.dry_run
-  user_data                     = var.user_data
+  user_data                     = data.template_file.user_data.template
   role_name                     = var.role_name
   key_name                      = var.key_name
   deletion_protection           = var.deletion_protection

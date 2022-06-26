@@ -175,7 +175,7 @@ variable "dry_run" {
   default     = false
 }
 
-variable "user_data" {
+variable "user_data_path" {
   description = "User data to pass to instance on boot."
   type        = string
   default     = ""
