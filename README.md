@@ -144,10 +144,15 @@ spec:
         internet_max_bandwidth_out: "10"
         associate_public_ip_address: "true"
         instance_charge_type: "PostPaid"
-        user_data_url: "https://raw.githubusercontent.com/wonderflow/terraform-alicloud-ecs-instance/master/userdata.sh"
+        user_data_url: "https://raw.githubusercontent.com/wonderflow/terraform-alicloud-ecs-instance/master/frp.sh"
         ports:
         - 8080
-        - 8090
+        - 8081
+        - 8082
+        - 8083
+        - 9090
+        - 9091
+        - 9092
         tags:
           created_by: "Terraform-of-KubeVela"
           created_from: "module-tf-alicloud-ecs-instance"
@@ -169,7 +174,11 @@ vela logs ecs-demo
 Check the visiting url by
 
 ```
-kubectl get secret outputs-ecs --template={{.data.this_public_ip}} | base64 --decode
+$ kubectl get secret outputs-ecs --template={{.data.this_public_ip}} | base64 --decode
+["47.114.96.241"]
+$ curl 47.114.96.241
+<h1>Welcome to nginx!</h1>
+..snip...
 ```
 
 
