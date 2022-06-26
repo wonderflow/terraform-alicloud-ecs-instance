@@ -105,7 +105,7 @@ More details: https://kubevela.net/docs/platform-engineers/components/component-
 
 The end user can use the terraform module as a KubeVela component now.
 
-## Deploy a basic application including the resource
+## Deploy an frp tunnel server within ECS
 
 1. Check the parameters
 
@@ -182,6 +182,43 @@ $ curl 47.114.96.241
 ```
 
 
-### Compose Terraform Resource in Workflow
+### Use frp client as a sidecar trait for service
 
-1. Read ECS installation script from URL and mount it with the Terraform Controller.
+Use a sidecar to visiting app from the public IP.
+
+```yaml
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: vela-app-with-sidecar
+spec:
+  components:
+    - name: web
+      type: webservice
+      properties:
+        image: oamdev/hello-world:v2
+        ports:
+          - port: 8000
+      traits:
+        - type: sidecar
+          properties:
+            name: frp-client
+            image: oamdev/frpc:0.43.0
+            env:
+              - name: server_addr
+                value: "47.114.96.241"
+              - name: server_port
+                value: "9090"
+              - name: local_port
+                value: "8000"
+              - name: remote_port
+                value: "8082"
+```
+
+Wow! Then you can visiting the webservice by:
+
+```
+curl 47.114.96.241:8082
+```
+
+You can visit any of your service with a public IP in this way!
