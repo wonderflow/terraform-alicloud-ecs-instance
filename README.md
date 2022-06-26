@@ -121,7 +121,7 @@ vela show alibaba-ecs --web
 
 2. Deploy a basic application with the ecs resource.
 
-```
+```shell
 cat <<EOF | vela up -f -
 # YAML begins
 apiVersion: core.oam.dev/v1beta1
@@ -135,28 +135,27 @@ spec:
       properties:
         providerRef:
           name: terraform-alibaba-default
-        tags:
-          created_by: "Terraform-of-KubeVela"
-          created_from: "module-tf-alicloud-ecs-instance"
-        instance_name: "test-terraform-vela-123"
+        writeConnectionSecretToRef:
+          name: outputs-ecs          
+        name: "test-terraform-vela-123"
         instance_type: "ecs.n1.tiny"
         host_name: "test-terraform-vela"
         password: "Test-123456!"
-        internet_max_bandwidth_out: "20"
+        internet_max_bandwidth_out: "10"
         associate_public_ip_address: "true"
         instance_charge_type: "PostPaid"
-        user_data_path: ""
-        system_disk_category: "cloud_efficiency"
-        system_disk_size: "40"
-        spot_strategy: "NoSpot"
+        user_data_url: "https://raw.githubusercontent.com/wonderflow/terraform-alicloud-ecs-instance/master/userdata.sh"
         ports:
         - 8080
         - 8090
-        writeConnectionSecretToRef:
-          name: outputs-ecs
+        tags:
+          created_by: "Terraform-of-KubeVela"
+          created_from: "module-tf-alicloud-ecs-instance"
 # YAML ends
 EOF
 ```
+
+This application will deploy an ECS instance with a public ip.
 
 3. Check the status and logs
 
@@ -164,6 +163,15 @@ EOF
 vela status ecs-demo
 vela logs ecs-demo
 ```
+
+4. You can get the secret from the terraform resource contains the output values.
+
+Check the visiting url by
+
+```
+kubectl get secret outputs-ecs --template={{.data.this_public_ip}} | base64 --decode
+```
+
 
 ### Compose Terraform Resource in Workflow
 

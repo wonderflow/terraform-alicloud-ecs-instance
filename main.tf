@@ -51,6 +51,16 @@ data "template_file" "user_data" {
   template = var.user_data_path == "" ? "" : file(var.user_data_path)
 }
 
+data "http" "user_data" {
+  count = var.user_data_url == "" ? 0 : 1
+  url   = var.user_data_url
+
+  # Optional request headers
+  request_headers = {
+    Accept = "application/x-sh"
+  }
+}
+
 # ECS Instance Resource for Module
 resource "alicloud_instance" "this" {
 
@@ -94,7 +104,7 @@ resource "alicloud_instance" "this" {
   auto_renew_period             = lookup(local.subscription, "auto_renew_period", null)
   include_data_disks            = lookup(local.subscription, "include_data_disks", null)
   dry_run                       = var.dry_run
-  user_data                     = data.template_file.user_data.template
+  user_data                     = var.user_data_url != "" ? data.http.user_data.0.response_body : data.template_file.user_data.template
   role_name                     = var.role_name
   key_name                      = var.key_name
   deletion_protection           = var.deletion_protection

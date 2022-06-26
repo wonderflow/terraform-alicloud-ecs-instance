@@ -181,6 +181,12 @@ variable "user_data_path" {
   default     = ""
 }
 
+variable "user_data_url" {
+  description = "User data read from url and pass to instance on boot."
+  type        = string
+  default     = ""
+}
+
 variable "role_name" {
   description = "Instance RAM role name. The name is provided and maintained by RAM. You can use 'alicloud_ram_role' to create a new one."
   type        = string
