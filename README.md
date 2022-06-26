@@ -66,20 +66,6 @@ KubeVela is a modern software delivery control plane that aims to make deploying
 
 Before start, make sure you have [installed kubevela control plane](https://kubevela.net/docs/install#1-install-velad), don't worry if you don't have Kubernetes cluster, velad is enough for the quick demo.
 
-* Enable Terraform Addon and Alibaba Provider
-
-```
-vela addon enable terraform
-vela addon enable terraform-alibaba
-```
-
-* Add credentials as provider
-
-```
-vela provider add terraform-alibaba --ALICLOUD_ACCESS_KEY <"your-accesskey-id"> --ALICLOUD_SECRET_KEY "your-accesskey-secret" --ALICLOUD_REGION <your-region> --name terraform-alibaba-default
-```
-
-More details: https://kubevela.net/docs/reference/addons/terraform
 
 ### Extend Cloud Resource for KubeVela
 
@@ -105,7 +91,24 @@ More details: https://kubevela.net/docs/platform-engineers/components/component-
 
 The end user can use the terraform module as a KubeVela component now.
 
-## Deploy an frp tunnel server within ECS
+### Enable addon for cloud resources
+
+* Enable Terraform Addon and Alibaba Provider
+
+```
+vela addon enable terraform
+vela addon enable terraform-alibaba
+```
+
+* Add credentials as provider
+
+```
+vela provider add terraform-alibaba --ALICLOUD_ACCESS_KEY <"your-accesskey-id"> --ALICLOUD_SECRET_KEY "your-accesskey-secret" --ALICLOUD_REGION <your-region> --name terraform-alibaba-default
+```
+
+More details: https://kubevela.net/docs/reference/addons/terraform
+
+### Deploy an frp tunnel server within ECS
 
 1. Check the parameters
 
