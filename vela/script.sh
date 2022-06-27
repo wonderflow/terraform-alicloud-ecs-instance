@@ -4,9 +4,9 @@ echo "
 server_addr = ${server_addr}
 server_port = ${server_port}
 
-[web]
+[${connect_name}]
 type = tcp
-local_ip = 127.0.0.1
+local_ip = ${local_ip}
 local_port = ${local_port}
 remote_port = ${remote_port}
 " > frpc.ini

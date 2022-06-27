@@ -22,5 +22,9 @@ spec:
                 value: "9090"
               - name: local_port
                 value: "8000"
+              - name: connect_name
+                value: "my_web"
+              - name: local_ip
+                value: "127.0.0.1"
               - name: remote_port
                 value: "6002"
