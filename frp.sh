@@ -14,7 +14,7 @@ dashboard_addr = 0.0.0.0
 dashboard_port = 9091
 dashboard_user = admin
 dashboard_pwd = vela123
-" >> frps.ini
+" > frps.ini
 
-nohup ./frps >./frps.log 2>&1 &
+nohup ./frps -c frps.ini >./frps.log 2>&1 &
 

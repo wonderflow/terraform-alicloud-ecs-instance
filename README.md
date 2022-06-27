@@ -108,7 +108,7 @@ vela provider add terraform-alibaba --ALICLOUD_ACCESS_KEY <"your-accesskey-id"> 
 
 More details: https://kubevela.net/docs/reference/addons/terraform
 
-### Deploy an frp tunnel server within ECS
+### Deploy an `frp` tunnel server within ECS
 
 1. Check the parameters
 
@@ -174,22 +174,25 @@ vela logs ecs-demo
 
 4. You can get the secret from the terraform resource contains the output values.
 
-Check the visiting url by
+You may already see the result in `vela logs`, you can also check the output information from Terraform by:
 
-```
+```shell
 $ kubectl get secret outputs-ecs --template={{.data.this_public_ip}} | base64 --decode
-["47.114.96.241"]
-$ curl 47.114.96.241
-<h1>Welcome to nginx!</h1>
-..snip...
+["121.196.106.174"]
 ```
+
+5. In the user_data url, we already installed [frp](https://github.com/fatedier/frp) which is a fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet.
+
+You can visit the frp server admin page on port `:9091`, the `admin` password is `vela123` in the script.
 
 
 ### Use frp client as a sidecar trait for service
 
 Use a sidecar to visiting app from the public IP.
 
-```yaml
+```shell
+cat <<EOF | vela up -f -
+# YAML begins
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
@@ -209,19 +212,21 @@ spec:
             image: oamdev/frpc:0.43.0
             env:
               - name: server_addr
-                value: "47.114.96.241"
+                value: "121.196.106.174"
               - name: server_port
                 value: "9090"
               - name: local_port
                 value: "8000"
               - name: remote_port
                 value: "8082"
+# YAML ends
+EOF
 ```
 
 Wow! Then you can visiting the webservice by:
 
 ```
-curl 47.114.96.241:8082
+curl 121.196.106.174:8082
 ```
 
 You can visit any of your service with a public IP in this way!
