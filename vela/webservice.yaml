@@ -1,0 +1,33 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: composed-app
+spec:
+  components:
+    - name: web-new
+      type: webservice
+      properties:
+        image: oamdev/hello-world:v2
+        ports:
+          - port: 8000
+            expose: true
+    - name: frp-web
+      type: worker
+      properties:
+        image: oamdev/frpc:0.43.0
+        env:
+          - name: server_addr
+            valueFrom:
+              secretKeyRef:
+                name: outputs-ecs
+                key: this_public_ip
+          - name: server_port
+            value: "9090"
+          - name: local_port
+            value: "8000"
+          - name: connect_name
+            value: "composed-app"
+          - name: local_ip
+            value: "web-new.default"
+          - name: remote_port
+            value: "8081"
